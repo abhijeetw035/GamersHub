@@ -26,7 +26,7 @@ const getGameHandler = async (req, res) => {
 
     // Fetch comments for the specific game ID
     const comments = await Comment.find({ gameId: id });
-    console.log(comments);
+    // console.log(comments);
 
     // Fetch details for the specific app ID
     const response = await axios.get(
@@ -34,17 +34,11 @@ const getGameHandler = async (req, res) => {
     );
 
     // Extract the app details from the response
-    const appDetails = response.data;
+    const appDetails = response.data[id].data;
+    // console.log(appDetails);
 
     // You can check if the response was successful and further process the data if needed
-    const appId = Object.keys(appDetails)[0];
-    if (appDetails[appId].success) {
-      const appData = appDetails[appId].data;
-      // console.log(appData); // Log the app data for debugging
-      res.json({ comments, appData }); // Send the detailed app information to the frontend
-    } else {
-      res.status(404).send("App not found");
-    }
+    res.json({ comments, appDetails }); // Send the detailed app information to the frontend
   } catch (error) {
     console.error("Error fetching data:", error.message);
     res.status(500).send("Error fetching data");
