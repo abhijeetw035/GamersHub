@@ -21,7 +21,6 @@ const createCommentHandler = async (req, res) => {
 };
 
 const getGameHandler = async (req, res) => {
-  const { id } = req.params;
   try {
     const { id } = req.params;
 
