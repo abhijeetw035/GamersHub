@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const GameSchema = new mongoose.Schema({
+const RatingSchema = new mongoose.Schema({
   gameId: {
     type: String,
   },
@@ -10,5 +10,5 @@ const GameSchema = new mongoose.Schema({
   },
 });
 
-const Game = mongoose.model("Game", GameSchema);
-module.exports = Game;
+const Rating = mongoose.model("Rating", RatingSchema);
+module.exports = Rating;
