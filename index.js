@@ -18,10 +18,12 @@ app.use(checkForAuthenticationCookie("token")); // Check for authentication cook
 // get routes
 const authRoutes = require("./routes/auth");
 const homeRoutes = require("./routes/home");
+const gameRoutes = require("./routes/game");
 
 // routes
 app.use("/auth", authRoutes);
 app.use("/", homeRoutes);
+app.use("/games", gameRoutes);
 
 // mongoose setup
 const PORT = 3001;
