@@ -15,9 +15,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token")); // Check for authentication cookie
 
-// routes
+// get routes
 const authRoutes = require("./routes/auth");
-app.use("/", authRoutes);
+const homeRoutes = require("./routes/home");
+
+// routes
+app.use("/auth", authRoutes);
+app.use("/", homeRoutes);
 
 // mongoose setup
 const PORT = 3001;
