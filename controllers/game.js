@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Comment = require("../models/comment");
 const Rating = require("../models/rating");
+const User = require("../models/user");
 
 const createCommentHandler = async (req, res) => {
   const { content, gameId, createdBy } = req.body;
@@ -89,7 +90,7 @@ const getRatingHandler = async (req, res) => {
 
   try {
     // Find the rating document by gameId
-    const ratingDoc = await Rating.findOne({ gameId : id });
+    const ratingDoc = await Rating.findOne({ gameId: id });
 
     if (!ratingDoc) {
       return res.status(200).json({ averageRating: 0 });
@@ -106,9 +107,74 @@ const getRatingHandler = async (req, res) => {
   }
 };
 
+const addToWishlistHandler = async (req, res) => {
+  const { gameId, img, rating, genre, userId } = req.body;
+  console.log(gameId, img, rating, genre, userId);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the game is already in the user's wishlist
+    if (user.wishlist.some((game) => game.gameId === gameId)) {
+      return res.status(400).json({ message: "Game already in wishlist" });
+    }
+
+    // Add the gameId to the wishlist array
+    user.wishlist.push({ gameId, img, rating, genre });
+
+    // Save the updated user document
+    await user.save();
+
+    return res.status(200).json({ message: "Added to wishlist successfully" });
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+const addToGamesPlayed = async (req, res) => {
+  const { gameId, img, rating, genre, userId } = req.body;
+  console.log(gameId, img, rating, genre, userId);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the game is already in the user's gamesPlayed
+    if (user.playedGames.some((game) => game.gameId === gameId)) {
+      return res.status(400).json({ message: "Game already in gamesPlayed" });
+    }
+
+    // Add the gameId to the gamesPlayed array
+    user.playedGames.push({ gameId, img, rating, genre });
+
+    // Save the updated user document
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Added to gamesPlayed successfully" });
+  } catch (error) {
+    console.error("Error adding to gamesPlayed:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 module.exports = {
   getGameHandler,
   ratingHandler,
   createCommentHandler,
   getRatingHandler,
+  addToWishlistHandler,
+  addToGamesPlayed,
 };

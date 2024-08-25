@@ -25,6 +25,8 @@ app.use("/auth", authRoutes);
 app.use("/", homeRoutes);
 app.use("/games", gameRoutes);
 
+// need to add get profile in get route and post route for profile
+
 // mongoose setup
 const PORT = 3001;
 app.listen(PORT, () => {
