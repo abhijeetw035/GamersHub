@@ -8,10 +8,11 @@ const commentSchema = new Schema(
     },
     gameId: {
       type: String,
+      required: true,
     },
     createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const registerHandler = async (req, res) => {
   const { email, password, username } = req.body;
+  console.log(email, password, username);
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);

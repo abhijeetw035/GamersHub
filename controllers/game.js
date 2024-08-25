@@ -1,13 +1,34 @@
 const axios = require("axios");
+const Comment = require("../models/comment");
 
-const commentHandler = async (req, res) => {
-  const { id } = req.params;
-  res.send("Comment posted on game with ID: " + id);
+const createCommentHandler = async (req, res) => {
+  const { content, gameId, createdBy } = req.body;
+  console.log(content, gameId, createdBy);
+
+  try {
+    const newComment = new Comment({
+      content,
+      gameId,
+      createdBy,
+    });
+
+    await newComment.save();
+    res.status(201).send("Comment created successfully");
+  } catch (error) {
+    console.error("Error creating comment:", error.message);
+    res.status(500).send("Error creating comment");
+  }
 };
 
 const getGameHandler = async (req, res) => {
   const { id } = req.params;
   try {
+    const { id } = req.params;
+
+    // Fetch comments for the specific game ID
+    const comments = await Comment.find({ gameId: id });
+    console.log(comments);
+
     // Fetch details for the specific app ID
     const response = await axios.get(
       `https://store.steampowered.com/api/appdetails?appids=${id}`
@@ -21,7 +42,7 @@ const getGameHandler = async (req, res) => {
     if (appDetails[appId].success) {
       const appData = appDetails[appId].data;
       // console.log(appData); // Log the app data for debugging
-      res.json(appData); // Send the detailed app information to the frontend
+      res.json({ comments, appData }); // Send the detailed app information to the frontend
     } else {
       res.status(404).send("App not found");
     }
@@ -33,5 +54,5 @@ const getGameHandler = async (req, res) => {
 
 module.exports = {
   getGameHandler,
-  commentHandler,
+  createCommentHandler,
 };
